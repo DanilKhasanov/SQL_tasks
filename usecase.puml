@@ -1,0 +1,76 @@
+@startuml
+left to right direction
+
+actor Гость as guest
+actor Читатель as reader
+actor Автор as author
+actor Редактор as editor
+actor Администратор as admin
+
+reader --|> guest
+author --|> reader
+editor --|> author
+admin --|> editor
+
+rectangle "Интернет-газета" {
+  usecase "Просмотр статей" as UC1
+  usecase "Просмотр категорий" as UC2
+  usecase "Просмотр тегов" as UC3
+  usecase "Просмотр комментариев" as UC4
+  usecase "Регистрация" as UC5
+  usecase "Вход в систему" as UC6
+  usecase "Управление профилем" as UC7
+  usecase "Оставить комментарий" as UC8
+  usecase "Редактировать свой комментарий" as UC9
+  usecase "Удалить свой комментарий" as UC10
+  usecase "Создать статью" as UC11
+  usecase "Редактировать свою статью" as UC12
+  usecase "Удалить свою статью" as UC13
+  usecase "Загрузить медиа" as UC14
+  usecase "Присвоить теги статье" as UC15
+  usecase "Управление категориями" as UC16
+  usecase "Управление тегами" as UC17
+  usecase "Управление комментариями (любыми)" as UC18
+  usecase "Управление медиа (любыми)" as UC19
+  usecase "Редактировать любую статью" as UC20
+  usecase "Публиковать статью" as UC21
+  usecase "Архивировать статью" as UC22
+  usecase "Управление пользователями" as UC23
+}
+
+guest -- UC1
+guest -- UC2
+guest -- UC3
+guest -- UC4
+guest -- UC5
+guest -- UC6
+
+reader -- UC7
+reader -- UC8
+reader -- UC9
+reader -- UC10
+
+author -- UC11
+author -- UC12
+author -- UC13
+author -- UC14
+author -- UC15
+
+editor -- UC16
+editor -- UC17
+editor -- UC18
+editor -- UC19
+editor -- UC20
+editor -- UC21
+editor -- UC22
+
+admin -- UC23
+admin -- UC16
+admin -- UC17
+admin -- UC18
+admin -- UC19
+admin -- UC20
+admin -- UC21
+admin -- UC22
+
+@enduml
