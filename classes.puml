@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+
+class User {
+  +userid: UUID
+  +firstname: String
+  +lastname: String
+  +email: String
+  +password: String
+  +role: Role
+  +register()
+  +login()
+  +updateProfile()
+}
+
+class Article {
+  -articleid: int
+  -title: String
+  -content: String
+  -publishDate: Datetime
+  -status: Status
+  +create()
+  +edit()
+  +publish()
+  +archive()
+}
+
+class Category {
+  -id: int
+  -name: string
+  -description: string
+  +addCategory()
+  +editCategory()
+}
+
+class Tag {
+  -id: int
+  -name: string
+}
+
+class Comment {
+  -id: int
+  -content: String
+  -createdAt: datetime
+  +addComment()
+  +editComment()
+  +deleteComment()
+}
+
+class Media {
+  -id: int
+  -filePath: string
+  -type: MediaType
+  -caption: string
+  +upload()
+  +delete()
+}
+
+enum Role {
+  READER
+  AUTHOR
+  EDITOR
+  ADMIN
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+}
+
+' Связи
+User "1" -- "0..*" Article 
+User "1" -- "0..*" Comment 
+Article "1" -- "0..*" Comment 
+Article "0..*" -- "1" Category 
+Article "1" -- "0..*" Media 
+Article "*" -- "*" Tag 
+
+@enduml
