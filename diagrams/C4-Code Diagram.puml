@@ -1,0 +1,146 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+' ===================== ARTICLE =====================
+package "Article Module" {
+
+class ArticleController {
+  +create(dto)
+  +edit(id, dto)
+  +publish(id)
+  +archive(id)
+}
+
+class ArticleService {
+  +create()
+  +edit()
+  +publish()
+  +archive()
+}
+
+class ArticleRepository {
+  +save()
+  +findById()
+  +delete()
+}
+
+class Article {
+  -id: int
+  -title: String
+  -content: String
+  -status: Status
+}
+
+ArticleController --> ArticleService
+ArticleService --> ArticleRepository
+ArticleService --> Article
+}
+
+' ===================== USER / AUTH =====================
+package "User & Auth Module" {
+
+class AuthController {
+  +login()
+  +register()
+}
+
+class AuthService {
+  +authenticate()
+  +generateToken()
+}
+
+class UserService {
+  +createUser()
+  +updateProfile()
+}
+
+class UserRepository {
+  +save()
+  +findByEmail()
+}
+
+class User {
+  -id: UUID
+  -email: String
+  -password: String
+  -role: Role
+}
+
+AuthController --> AuthService
+AuthService --> UserService
+UserService --> UserRepository
+UserService --> User
+}
+
+' ===================== COMMENT =====================
+package "Comment Module" {
+
+class CommentController {
+  +add()
+  +edit()
+  +delete()
+}
+
+class CommentService {
+  +add()
+  +edit()
+  +delete()
+}
+
+class CommentRepository {
+  +save()
+  +delete()
+}
+
+class Comment {
+  -id: int
+  -content: String
+}
+
+CommentController --> CommentService
+CommentService --> CommentRepository
+CommentService --> Comment
+}
+
+' ===================== MEDIA =====================
+package "Media Module" {
+
+class MediaService {
+  +upload()
+  +delete()
+}
+
+class MediaRepository {
+  +save()
+}
+
+class Media {
+  -id: int
+  -filePath: string
+  -type: MediaType
+}
+
+MediaService --> MediaRepository
+MediaService --> Media
+}
+
+' ===================== REVIEW =====================
+package "Moderation Module" {
+
+class ReviewService {
+  +approve()
+  +reject()
+  +requestChanges()
+}
+
+}
+
+' ===================== CROSS-MODULE LINKS =====================
+
+ArticleService --> CommentService : manages
+ArticleService --> MediaService : manages
+ReviewService --> ArticleService : moderates
+
+@enduml

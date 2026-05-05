@@ -1,0 +1,32 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title C4 Component Diagram – Backend API
+
+Container(api, "Backend API") {
+
+  Component(auth, "Auth Service", "JWT/Auth", "Аутентификация и авторизация")
+  
+  Component(userService, "User Service", "Service", "Управление пользователями")
+  
+  Component(articleService, "Article Service", "Service", "Управление статьями")
+  
+  Component(reviewService, "Review Service", "Service", "Рецензирование статей")
+  
+  Component(commentService, "Comment Service", "Service", "Комментарии")
+  
+  Component(categoryService, "Category Service", "Service", "Категории")
+  
+  Component(tagService, "Tag Service", "Service", "Теги")
+  
+  Component(mediaService, "Media Service", "Service", "Медиа файлы")
+}
+
+Rel(auth, userService, "Проверка пользователей")
+Rel(articleService, reviewService, "Отправка на проверку")
+Rel(articleService, categoryService, "Категории")
+Rel(articleService, tagService, "Теги")
+Rel(articleService, mediaService, "Медиа")
+Rel(commentService, articleService, "Комментарии к статьям")
+
+@enduml
