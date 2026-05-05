@@ -1,0 +1,33 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title C4 Context – Интернет-газета
+
+' немного визуальных настроек
+LAYOUT_LEFT_RIGHT()
+skinparam shadowing false
+
+' ===== АКТЁРЫ =====
+Person(guest, "Гость", "Неавторизованный пользователь")
+Person(reader, "Читатель", "Просматривает статьи и пишет комментарии")
+Person(author, "Автор", "Создаёт и редактирует статьи")
+Person(editor, "Редактор", "Проверяет и публикует статьи")
+Person(admin, "Администратор", "Управляет системой и пользователями")
+
+' ===== СИСТЕМА =====
+System_Boundary(system_boundary, "Система Интернет-газета") {
+    System(system, "Интернет-газета", "Платформа публикации и модерации контента")
+}
+
+' ===== СВЯЗИ (сгруппированы и читаемы) =====
+Rel(guest, system, "Просмотр статей\nРегистрация / вход")
+
+Rel(reader, system, "Чтение статей\nКомментарии\nУправление профилем")
+
+Rel(author, system, "Создание и редактирование статей\nЗагрузка медиа\nНазначение тегов")
+
+Rel(editor, system, "Проверка статей\nПубликация\nАрхивация")
+
+Rel(admin, system, "Управление пользователями\nКатегории и теги\nКонтент")
+
+@enduml
