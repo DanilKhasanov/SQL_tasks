@@ -1,0 +1,35 @@
+@startuml YouTube_VideoService_Components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(videoService, "Video Service") {
+
+    Component(videoApi, "Video API Controller", "Go Fiber", "REST API")
+    Component(metadataManager, "Metadata Manager", "Go", "Управление метаданными")
+    Component(transcodingOrchestrator, "Transcoding Orchestrator", "Go", "Оркестрация конвертации")
+    Component(thumbnailGenerator, "Thumbnail Generator", "FFmpeg", "Генерация превью")
+    Component(videoValidator, "Video Validator", "Go", "Проверка файлов")
+    Component(eventPublisher, "Event Publisher", "Kafka Producer", "Публикация событий")
+    Component(accessControl, "Access Control", "RBAC", "Права доступа")
+}
+
+ContainerDb(videoDb, "Video Metadata DB", "Cassandra")
+Container(blob, "Object Storage", "S3/GCS")
+Container(queue, "Kafka", "Event Bus")
+Container(cache, "Redis", "Cache")
+
+Rel(videoApi, metadataManager, "Uses")
+Rel(videoApi, accessControl, "Checks access")
+
+Rel(metadataManager, videoDb, "R/W")
+Rel(metadataManager, cache, "Caches metadata")
+
+Rel(transcodingOrchestrator, blob, "Reads/Writes")
+Rel(transcodingOrchestrator, eventPublisher, "Publishes transcoding events")
+
+Rel(videoValidator, blob, "Validates uploaded video")
+
+Rel(thumbnailGenerator, blob, "Stores thumbnails")
+
+Rel(eventPublisher, queue, "Publishes")
+
+@enduml

@@ -1,0 +1,81 @@
+@startuml YouTube_UseCase
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Гость" as Guest
+actor "Пользователь" as User
+actor "Автор контента" as Creator
+actor "Модератор" as Moderator
+actor "Рекламодатель" as Advertiser
+actor "Администратор" as Admin
+
+rectangle "YouTube Platform" {
+
+    usecase "Регистрация" as UC_Register
+    usecase "Авторизация" as UC_Login
+    usecase "Просмотр видео" as UC_Watch
+    usecase "Поиск видео" as UC_Search
+    usecase "Подписка на канал" as UC_Subscribe
+    usecase "Лайк видео" as UC_Like
+    usecase "Дизлайк видео" as UC_Dislike
+    usecase "Комментирование" as UC_Comment
+    usecase "Создание плейлиста" as UC_Playlist
+    usecase "Просмотр истории" as UC_History
+    usecase "Получение рекомендаций" as UC_Recommendations
+    usecase "Просмотр рекламы" as UC_Ads
+
+    usecase "Загрузка видео" as UC_Upload
+    usecase "Удаление видео" as UC_DeleteVideo
+    usecase "Редактирование видео" as UC_EditVideo
+    usecase "Управление каналом" as UC_Channel
+    usecase "Просмотр аналитики" as UC_Analytics
+    usecase "Запуск стрима" as UC_Stream
+
+    usecase "Модерация контента" as UC_Moderation
+    usecase "Блокировка видео" as UC_BlockVideo
+    usecase "Обработка жалоб" as UC_Reports
+
+    usecase "Создание рекламной кампании" as UC_CreateAds
+    usecase "Настройка таргетинга" as UC_Targeting
+    usecase "Просмотр статистики рекламы" as UC_AdsAnalytics
+
+    usecase "Управление пользователями" as UC_UserManagement
+    usecase "Управление системой" as UC_SystemManagement
+}
+
+Guest --> UC_Register
+Guest --> UC_Login
+Guest --> UC_Watch
+Guest --> UC_Search
+
+User --> UC_Watch
+User --> UC_Search
+User --> UC_Subscribe
+User --> UC_Like
+User --> UC_Dislike
+User --> UC_Comment
+User --> UC_Playlist
+User --> UC_History
+User --> UC_Recommendations
+
+Creator --> UC_Upload
+Creator --> UC_DeleteVideo
+Creator --> UC_EditVideo
+Creator --> UC_Channel
+Creator --> UC_Analytics
+Creator --> UC_Stream
+
+Moderator --> UC_Moderation
+Moderator --> UC_BlockVideo
+Moderator --> UC_Reports
+
+Advertiser --> UC_CreateAds
+Advertiser --> UC_Targeting
+Advertiser --> UC_AdsAnalytics
+
+Admin --> UC_UserManagement
+Admin --> UC_SystemManagement
+
+
+@enduml
