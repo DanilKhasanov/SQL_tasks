@@ -1,0 +1,30 @@
+@startuml YouTube_Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_LEFT_RIGHT()
+
+Person(user, "Пользователь", "Смотрит видео, лайкает, подписывается")
+Person(creator, "Автор контента", "Загружает видео и управляет каналом")
+Person(admin, "Модератор", "Проверяет жалобы и модерирует контент")
+Person(advertiser, "Рекламодатель", "Запускает рекламу")
+
+System(youtube, "YouTube", "Платформа видеохостинга")
+
+System_Ext(googleAuth, "Google Identity", "OAuth2 / SSO")
+System_Ext(payment, "Payment Gateway", "Оплата Premium и донатов")
+System_Ext(cdn, "Global CDN", "Доставка видео")
+System_Ext(ads, "Ad Network", "Рекламная сеть")
+System_Ext(analytics, "Analytics Platform", "Сбор метрик")
+
+Rel(user, youtube, "Смотрит видео, комментирует")
+Rel(creator, youtube, "Загружает видео")
+Rel(admin, youtube, "Модерирует")
+Rel(advertiser, youtube, "Создает рекламные кампании")
+
+Rel(youtube, googleAuth, "Аутентификация")
+Rel(youtube, payment, "Платежи")
+Rel(youtube, cdn, "Раздача видео")
+Rel(youtube, ads, "Показы рекламы")
+Rel(youtube, analytics, "Отправка метрик")
+
+@enduml

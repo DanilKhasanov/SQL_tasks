@@ -1,0 +1,81 @@
+@startuml YouTube_Code_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN()
+
+title YouTube - Video Service Code Diagram
+
+Container_Boundary(video_service, "Video Service") {
+
+    Component(videoController, "VideoController", "REST Controller")
+    Component(uploadController, "UploadController", "REST Controller")
+
+    Component(videoApplicationService, "VideoApplicationService", "Application Service")
+    Component(uploadApplicationService, "UploadApplicationService", "Application Service")
+
+    Component(videoDomainService, "VideoDomainService", "Domain Service")
+    Component(transcodingDomainService, "TranscodingDomainService", "Domain Service")
+
+    Component(videoRepository, "VideoRepository", "Repository")
+    Component(storageRepository, "StorageRepository", "Repository")
+
+    Component(videoEntity, "Video", "Domain Entity")
+    Component(channelEntity, "Channel", "Domain Entity")
+
+    Component(videoFactory, "VideoFactory", "Factory")
+    Component(videoMapper, "VideoMapper", "Mapper")
+
+    Component(transcodingWorker, "TranscodingWorker", "Background Worker")
+    Component(thumbnailWorker, "ThumbnailWorker", "Background Worker")
+
+    Component(ffmpegAdapter, "FFmpegAdapter", "Infrastructure Adapter")
+    Component(s3Adapter, "S3Adapter", "Infrastructure Adapter")
+    Component(kafkaProducer, "KafkaProducer", "Event Publisher")
+
+    Component(authMiddleware, "AuthMiddleware", "Security")
+    Component(rateLimiter, "RateLimiter", "Security")
+
+    Component(videoCreatedEvent, "VideoCreatedEvent", "Domain Event")
+    Component(videoProcessedEvent, "VideoProcessedEvent", "Domain Event")
+}
+
+ContainerDb(videoDb, "Video Metadata DB", "PostgreSQL/Cassandra")
+Container(blobStorage, "Blob Storage", "S3/GCS")
+Container(messageBroker, "Kafka", "Event Bus")
+
+Rel(videoController, authMiddleware, "Uses")
+Rel(videoController, rateLimiter, "Uses")
+
+Rel(videoController, videoApplicationService, "Calls")
+Rel(uploadController, uploadApplicationService, "Calls")
+
+Rel(videoApplicationService, videoDomainService, "Uses")
+Rel(uploadApplicationService, transcodingDomainService, "Uses")
+
+Rel(videoDomainService, videoFactory, "Creates entities")
+Rel(videoDomainService, videoRepository, "Persists")
+
+Rel(videoRepository, videoDb, "Reads/Writes")
+
+Rel(storageRepository, blobStorage, "Stores videos")
+
+Rel(transcodingDomainService, ffmpegAdapter, "Uses")
+Rel(transcodingDomainService, transcodingWorker, "Schedules")
+
+Rel(transcodingWorker, ffmpegAdapter, "Executes transcoding")
+Rel(thumbnailWorker, ffmpegAdapter, "Generates thumbnails")
+
+Rel(ffmpegAdapter, blobStorage, "Reads/Writes")
+
+Rel(videoApplicationService, kafkaProducer, "Publishes events")
+
+Rel(kafkaProducer, messageBroker, "Publishes")
+
+Rel(videoCreatedEvent, kafkaProducer, "Sent through")
+Rel(videoProcessedEvent, kafkaProducer, "Sent through")
+
+Rel(videoMapper, videoEntity, "Maps")
+Rel(videoFactory, videoEntity, "Creates")
+Rel(videoEntity, channelEntity, "Belongs to")
+
+@enduml

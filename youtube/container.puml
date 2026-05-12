@@ -1,0 +1,80 @@
+@startuml YouTube_Containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "Пользователь")
+Person(creator, "Автор")
+
+System_Boundary(youtube, "YouTube Platform") {
+
+    Container(web, "Web Application", "React / Next.js", "Веб-интерфейс")
+    Container(mobile, "Mobile App", "iOS / Android", "Мобильный клиент")
+
+    Container(apiGateway, "API Gateway", "Kong / Envoy", "Единая точка входа")
+
+    Container(authService, "Auth Service", "Go", "JWT/OAuth2")
+    Container(userService, "User Service", "Java", "Профили пользователей")
+    Container(videoService, "Video Service", "Go", "Метаданные видео")
+    Container(uploadService, "Upload Service", "Go", "Загрузка видео")
+    Container(streamingService, "Streaming Service", "C++", "HLS/DASH streaming")
+    Container(recommendationService, "Recommendation Service", "Python ML", "Рекомендации")
+    Container(searchService, "Search Service", "Elasticsearch", "Поиск")
+    Container(commentService, "Comment Service", "Node.js", "Комментарии")
+    Container(notificationService, "Notification Service", "Go", "Push/email уведомления")
+    Container(adService, "Ads Service", "Java", "Реклама")
+    Container(modService, "Moderation Service", "Python", "AI moderation")
+
+    ContainerDb(userDb, "User DB", "PostgreSQL", "Пользователи")
+    ContainerDb(videoDb, "Video Metadata DB", "Cassandra", "Метаданные")
+    ContainerDb(commentDb, "Comment DB", "MongoDB", "Комментарии")
+    ContainerDb(graphDb, "Recommendation Graph", "Neo4j", "Граф интересов")
+
+    Container(cache, "Redis Cache", "Redis", "Кэш")
+    Container(queue, "Event Bus", "Kafka", "События")
+
+    Container(blob, "Object Storage", "S3/GCS", "Видео и превью")
+}
+
+System_Ext(cdn, "CDN")
+System_Ext(auth, "Google Identity")
+
+Rel(user, web, "Использует")
+Rel(user, mobile, "Использует")
+Rel(creator, web, "Загружает видео")
+
+Rel(web, apiGateway, "REST/HTTPS")
+Rel(mobile, apiGateway, "REST/gRPC")
+
+Rel(apiGateway, authService, "Auth")
+Rel(apiGateway, userService, "Users API")
+Rel(apiGateway, videoService, "Videos API")
+Rel(apiGateway, uploadService, "Upload API")
+Rel(apiGateway, commentService, "Comments API")
+Rel(apiGateway, recommendationService, "Recommendations")
+Rel(apiGateway, searchService, "Search")
+Rel(apiGateway, adService, "Ads")
+
+Rel(authService, auth, "OAuth2")
+
+Rel(userService, userDb, "R/W")
+Rel(videoService, videoDb, "R/W")
+Rel(commentService, commentDb, "R/W")
+
+Rel(videoService, cache, "Caching")
+Rel(searchService, cache, "Caching")
+
+Rel(uploadService, blob, "Stores video")
+Rel(streamingService, blob, "Reads chunks")
+Rel(streamingService, cdn, "Streams video")
+
+Rel(videoService, queue, "Publishes events")
+Rel(commentService, queue, "Publishes events")
+
+Rel(queue, recommendationService, "Consumes events")
+Rel(queue, notificationService, "Consumes events")
+Rel(queue, analytics, "Streams metrics")
+
+Rel(recommendationService, graphDb, "Reads/Writes")
+
+@enduml
